@@ -1,4 +1,5 @@
 from kivy.app import App
+from kivy.lang import Builder
 from kivy.core.text import LabelBase, DEFAULT_FONT
 from kivy.resources import resource_add_path
 from kivy.uix.boxlayout import BoxLayout
@@ -14,5 +15,7 @@ class ViewerApp(App):
 if __name__ == "__main__":
     resource_add_path('./fonts')
     LabelBase.register(DEFAULT_FONT, 'ipaexg.ttf')
+    
+    Builder.load_file('./kv/main.kv')
 
     ViewerApp().run()
