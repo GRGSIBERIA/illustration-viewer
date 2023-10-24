@@ -15,5 +15,5 @@ from albums as A
     inner join informations as I on A.info_id = I.rowid
     inner join pictures as P on P.rowid = I.picture_id
     inner join thumbs as T on T.rowid = I.thumb_id
-    order by I.rowid ?
-    LIMIT ? OFFSET ?;
+    order by :target :orderby
+    LIMIT :limit_num OFFSET :offset_num;

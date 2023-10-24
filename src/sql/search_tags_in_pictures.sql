@@ -17,8 +17,8 @@ from informations as I
     inner join pictures as P on I.picture_id = P.rowid
     inner join thumbs as TM on I.thumb_id = P.rowid
 where T.name in (???)
-    order by P.rowid ?
-    LIMIT ? OFFSET ?;
+    order by :target :orderby
+    LIMIT :limit_num OFFSET :offset_num;
 
 /* where句でin句を使う場合、配列を指定できないため、プレースホルダーの?をその個数だけ置き換える */
 /* [A, B, C] ならば replace("???", "?, ?, ?")

@@ -13,5 +13,5 @@ select
 from informations as I
     inner join pictures as P on I.picture_id = P.rowid
     inner join thumbs as T on I.thumb_id = T.rowid
-    order by I.rowid ?
-    LIMIT ? OFFSET ?;
+    order by :target :orderby
+    LIMIT :limit_num OFFSET offset_num;
