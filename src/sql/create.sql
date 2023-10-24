@@ -34,6 +34,7 @@ create index if not exists info_created_index on informations(created_at);
 create index if not exists info_imported_index on informations(imported_at);
 create index if not exists info_star_index on informations(is_star);
 create index if not exists info_goods_index on informations(goods);
+create index if not exists info_path_index on informations(imported_path);
 
 /* タグ */
 create table if not exists tags(
