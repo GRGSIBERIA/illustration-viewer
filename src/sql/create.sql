@@ -39,8 +39,10 @@ create index if not exists info_path_index on informations(imported_path);
 /* タグ */
 create table if not exists tags(
     name text NOT NULL UNIQUE
+    parent_id integer default NULL
 );
 create unique index if not exists tags_name_unique on tags(name);
+create index if not exists tags_parend_index on tags(parent_id);
 
 /* 情報とタグの紐づけ */
 create table if not exists assign_info_tags(
