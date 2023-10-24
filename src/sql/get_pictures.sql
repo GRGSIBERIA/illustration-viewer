@@ -1,4 +1,5 @@
 select 
+    I.rowid,
     I.created_at,
     I.imported_at,
     I.is_star,
