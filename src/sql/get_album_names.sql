@@ -1,0 +1,1 @@
+select rowid, name from albums order by name;
