@@ -1,3 +1,10 @@
-/* アルバム名を全件取得する */
+/* 
+    アルバム名を全件取得する
+    @input
+        :target 並び替え対象のカラム名
+        :orderby 昇順・降順
+*/
 
-select rowid, name from albums order by name;
+
+select A.rowid, A.name from albums as A 
+    order by :target :orderby;
