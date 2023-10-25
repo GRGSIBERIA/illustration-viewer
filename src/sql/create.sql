@@ -70,13 +70,21 @@ create index if not exists assign_created_at_index
 /* アルバム */
 create table if not exists albums(
     name text NOT NULL UNIQUE,
-    info_id integer NOT NULL
-        REFERENCES informations(rowid)
-        on delete cascade on update cascade,
     created_at text NOT NULL default (DATETIME('now', 'localtime'))
 );
-create index if not exists albums_info_index on albums(info_id);
 create unique index if not exists albums_name_index on albums(name);
 create index if not exists albums_created_index on albums(created_at);
+
+/* アルバムと画像の対 */
+create table if not exists assign_album_info(
+    album_id integer NOT NULL
+        REFERENCES albums(rowid)
+        on delete cascade on update cascade,
+    info_id integer NOT NULL
+        REFERENCES informations(rowid)
+        on delete cascade on update cascade
+);
+create unique index if not exists assign_unique
+    on assign_album_info(album_id, info_id)
 
 COMMIT;
