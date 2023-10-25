@@ -30,6 +30,7 @@ create table if not exists informations(
     goods integer NOT NULL DEFAULT 0,
     imported_path text NOT NULL
 );
+create unique index if not exists info_pictureid_index on informations(picture_id, thumb_id);
 create index if not exists info_created_index on informations(created_at);
 create index if not exists info_imported_index on informations(imported_at);
 create index if not exists info_star_index on informations(is_star);
