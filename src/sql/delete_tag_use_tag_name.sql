@@ -1,5 +1,7 @@
 /*
     タグ名でタグを削除する
+    on delete cascadeされているので、
+    assign_info_tagのレコードも削除される
     @input
         tagname タグ名
 */
