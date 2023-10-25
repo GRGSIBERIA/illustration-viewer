@@ -2,6 +2,8 @@
     指定した親タグ名から子タグを検索する
     @input
         :name 親タグ名
+        :target 並び替え対象のカラム名
+        :orderby 昇順・降順
 */
 select
     C.rowid,
