@@ -59,6 +59,8 @@ create index if not exists assign_info_index
     on assign_info_index on assign_info_tags(info_id);
 create index if not exists assign_tag_index
     on assign_tag_index on assign_info_tags(tag_id);
+create index if not exists assign_created_at_index
+    on assign_tag_index on assign_info_tags(created_at);
 
 /* アルバム */
 create table if not exists albums(
