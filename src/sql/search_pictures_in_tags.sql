@@ -3,12 +3,17 @@
     @input
         :tags 検索したいタグ名
         :target 並び替えする基準の変数名
+        :is_star スターの有無
+        :goods グッド数
+        :tags タグの集合
+        :target 並び替え対象のカラム名
         :orderby 昇順・降順
         :limit_num リミット
         :offset_num オフセット
 */
 select
-    I.rowid,
+    T.name,
+    distinct I.rowid,
     I.created_at,
     I.imported_at,
     I.is_star,
@@ -25,7 +30,10 @@ from informations as I
     inner join tags as T on IT.tag_id = T.rowid
     inner join pictures as P on I.picture_id = P.rowid
     inner join thumbs as TM on I.thumb_id = P.rowid
-where T.name in (:tags)
+    where 
+        T.name in (:tags) AND
+        I.is_star >= :is_star AND
+        I.goods >= :goods
     order by :target :orderby
     LIMIT :limit_num OFFSET :offset_num;
 
