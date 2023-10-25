@@ -20,10 +20,10 @@ create table if not exists thumbs(
 create table if not exists informations(
     picture_id integer NOT NULL UNIQUE
         references pictures(rowid)
-        on delete cascade, on update cascade,
+        on delete cascade on update cascade,
     thumb_id integer NOT NULL UNIQUE
         references thumbs(rowid)
-        on delete cascade, on update cascade,
+        on delete cascade on update cascade,
     created_at text NOT NULL default (DATETIME('now', 'localtime')),
     imported_at text NOT NULL default (DATETIME('now', 'localtime')),
     is_star integer NOT NULL DEFAULT 0,
@@ -40,7 +40,9 @@ create index if not exists info_path_index on informations(imported_path);
 /* タグ */
 create table if not exists tags(
     name text NOT NULL UNIQUE,
-    parent_id integer default NULL,
+    parent_id integer default NULL
+        references tags(rowid)
+        on delete set null on update cascade,
     created_at text NOT NULL DEFAULT (DATETIME('now', 'localtime'))
 );
 create unique index if not exists tags_name_unique on tags(name);
@@ -51,10 +53,10 @@ create index if not exists tags_created_index on tags(created_at);
 create table if not exists assign_info_tags(
     info_id integer NOT NULL 
         REFERENCES informations(rowid)
-        on delete cascade, on update cascade,
+        on delete cascade on update cascade,
     tag_id integer NOT NULL 
         REFERENCES tags(rowid)
-        on delete cascade, on update cascade,
+        on delete cascade on update cascade,
     created_at text NOT NULL default (DATETIME('now', 'localtime')),
     unique(info_id, tag_id)
 );
@@ -68,7 +70,7 @@ create table if not exists albums(
     name text NOT NULL UNIQUE,
     info_id integer NOT NULL
         REFERENCES informations(rowid)
-        on delete cascade, on update cascade,
+        on delete cascade on update cascade,
     created_at text NOT NULL default (DATETIME('now', 'localtime'))
 );
 create index if not exists albums_info_index on albums(info_id);
