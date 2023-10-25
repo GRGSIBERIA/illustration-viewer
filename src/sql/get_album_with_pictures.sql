@@ -1,3 +1,11 @@
+/* 
+    アルバムにぶら下がっている画像を全件取得する 
+    @input
+        :target 並び替えする基準の変数名
+        :orderby 昇順・降順
+        :limit_num リミット
+        :offset_num オフセット
+*/
 select
     A.name,
     I.rowid,

@@ -1,3 +1,9 @@
+/* 
+    タグを全件取得する
+    @input
+        :target 並び替えする基準の変数名
+        :orderby 昇順・降順
+*/
 SELECT
     distinct TAG.rowid,
     TAG.name,
