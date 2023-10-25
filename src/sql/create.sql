@@ -52,6 +52,7 @@ create table if not exists assign_info_tags(
     tag_id integer NOT NULL 
         REFERENCES tags(rowid)
         on delete cascade, on update cascade,
+    created_at text NOT NULL default (DATETIME('now', 'localtime')),
     unique(info_id, tag_id)
 );
 create index if not exists assign_info_index
