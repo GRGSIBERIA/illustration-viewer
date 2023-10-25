@@ -1,7 +1,6 @@
 /* 
     アルバムにぶら下がっている画像を全件取得する 
     @input
-        :tags 検索をかけたいタグの文字列の集合
         :album_name 検索したいアルバム名
         :target 並び替えする基準の変数名
         :orderby 昇順・降順
@@ -23,12 +22,11 @@ select
     TM.item,
     TM.width,
     TM.height
-from informations as I, tags as TAG
-    inner join albums as A on A.info_id = I.rowid
+from informations as I
     inner join pictures as P on P.rowid = I.picture_id
     inner join thumbs as T on T.rowid = I.thumb_id
-    inner join assign_info_tags as AIT on AIT.info_id = I.rowid 
-    inner join tags as TAG on AIT.tag_id = TAG.rowid
-where TAG.name in (:tags) and A.name = :album_name
+    inner join assign_album_info as AAI on I.rowid = AAI.info_id
+    inner join albums as A on A.rowid = AAI.album_id
+    where A.name = :album_name
     order by :target :orderby
-    LIMIT :limit_num OFFSET :offset_num;
+    limit :limit_num offset :offset_num;
