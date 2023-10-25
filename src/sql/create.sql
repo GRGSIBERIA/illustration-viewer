@@ -1,5 +1,7 @@
 pragma foreign_keys = ON;
 
+BEGIN;
+
 /* 画像のデータ */
 create table if not exists pictures(
     item blob NOT NULL UNIQUE,
@@ -76,3 +78,5 @@ create table if not exists albums(
 create index if not exists albums_info_index on albums(info_id);
 create unique index if not exists albums_name_index on albums(name);
 create index if not exists albums_created_index on albums(created_at);
+
+COMMIT;
