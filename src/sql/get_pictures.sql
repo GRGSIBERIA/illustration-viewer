@@ -1,3 +1,11 @@
+/* 
+    画像を全件取得する。メモリに載るはずがないので非推奨。
+    @input
+        :target 並び替えする基準の変数名
+        :orderby 昇順・降順
+        :limit_num リミット
+        :offset_num オフセット
+*/
 select 
     I.rowid,
     I.created_at,

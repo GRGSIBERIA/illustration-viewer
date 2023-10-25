@@ -1,8 +1,13 @@
+/*
+    指定した親タグ名から子タグを検索する
+    @input
+        :name 親タグ名
+*/
 select
-    A.rowid,
-    A.name,
-    A.parent_id
-from tags as A
-    inner join tags as B on A.parent_id = B.rowid
-where B.name = :name
+    C.rowid,
+    C.name,
+    C.parent_id
+from tags as C
+    inner join tags as P on A.parent_id = P.rowid
+where P.name = :name
     order by :target :orderby;
