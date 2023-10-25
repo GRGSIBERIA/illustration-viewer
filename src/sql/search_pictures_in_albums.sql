@@ -6,6 +6,7 @@
         :is_star スターの有無
         :goods グッド数
         :tags タグの集合
+        :target 並び替え対象のカラム名
         :orderby 昇順・降順
         :limit_num リミット
         :offset_num オフセット
