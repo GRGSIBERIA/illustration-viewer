@@ -23,6 +23,6 @@ if __name__ == "__main__":
     resource_add_path('./fonts')
     LabelBase.register(DEFAULT_FONT, 'ipaexg.ttf')
     
-    Builder.load_file('./kv/main.kv')
+    Builder.load_file('./src/kv/main.kv')
 
     ViewerApp().run()
