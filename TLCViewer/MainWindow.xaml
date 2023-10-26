@@ -10,6 +10,11 @@
         <Menu x:Name="menu" DockPanel.Dock="Top">
             <MenuItem Header="ファイル(_F)"/>
             <MenuItem Header="表示(_V)"/>
+            <MenuItem Header="追加(_A)">
+                <MenuItem Header="アルバム"/>
+                <MenuItem Header="コレクション"/>
+                <MenuItem Header="タグ"/>
+            </MenuItem>
         </Menu>
         <ToolBar DockPanel.Dock="Top">
             <Label Content="検索"/>
@@ -44,9 +49,31 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button>
+                                <Image Source="/Images/rotate_right.png"/>
+                            </Button>
+                            <Button>
+                                <Image Source="/Images/rotate_left.png"/>
+                            </Button>
+                            <Button>
+                                <Image Source="/Images/star.png"/>
+                            </Button>
+                            <Button>
+                                <Image Source="/Images/thumb_up.png"/>
+                            </Button>
+                            <Button>
+                                <Image Source="/Images/thumb_down.png"/>
+                            </Button>
+                            <Button>
+                                <Image Source="/Images/add_circle.png"/>
+                            </Button>
+                            <Button>
+                                <Image Source="/Images/block.png"/>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0">
                             <Button Content="hoge"/>
-                            <Label Content="hoge"/>
-                            <Label Content="hoge"/>
+                            <Button Content="hoge"/>
                         </StackPanel>
                     </Grid>
                     <ListView Grid.Row="0" Grid.Column="2" Grid.RowSpan="1">

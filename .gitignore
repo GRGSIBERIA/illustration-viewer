@@ -163,3 +163,5 @@ cython_debug/
 TLCViewer/.vs/TLCViewer/DesignTimeBuild/.dtbcache.v2
 *.vsidx
 *.vsidx
+*.bin
+*.v2

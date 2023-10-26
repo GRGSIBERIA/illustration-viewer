@@ -7,4 +7,44 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Images\add_circle.png" />
+    <None Remove="Images\block.png" />
+    <None Remove="Images\recommend.png" />
+    <None Remove="Images\rotate_left.png" />
+    <None Remove="Images\rotate_right.png" />
+    <None Remove="Images\star.png" />
+    <None Remove="Images\thumbs_up_down.png" />
+    <None Remove="Images\thumb_down.png" />
+    <None Remove="Images\thumb_up.png" />
+    <None Remove="Images\verified.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\add_circle.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\block.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\rotate_left.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\rotate_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\star.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\thumb_down.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\thumb_up.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\verified.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
