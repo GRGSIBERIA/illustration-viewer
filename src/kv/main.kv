@@ -54,16 +54,21 @@
                 TextInput:
                     text: "0"
             ScrollView:
-                size_hint_x: 1
                 size_hint_y: 95
                 TreeView:
                     size_hint_x: 1
         BoxLayout:
             orientation: "vertical"
             size_hint_x: 10
-            Button:
-                text: "image"
+            BoxLayout:
+                orientation: "horizontal"
                 size_hint_y: 100
+                Button:
+                    text: "prev"
+                Button:
+                    text: "image"
+                Button:
+                    text: "next"
             BoxLayout:
                 orientation: "horizontal"
                 size_hint_y: 10
