@@ -66,6 +66,21 @@
                 size_hint_y: 100
             BoxLayout:
                 orientation: "horizontal"
+                size_hint_y: 10
+                Label:
+                    text: "横幅"
+                Slider:
+                    min: 1
+                    max: 10
+                    step: 1
+                Label:
+                    text: "縦幅"
+                Slider:
+                    min: 1
+                    max: 10
+                    step: 1
+            BoxLayout:
+                orientation: "horizontal"
                 size_hint_y: 8
                 Button:
                     text: "左回転"
