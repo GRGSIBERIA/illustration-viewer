@@ -1,13 +1,15 @@
 #:kivy 2.2.1
-<MainScreen>:
 
+<MainScreen>:
     orientation: "vertical"
+    pos_hint: {"x": 0, "top": 1}
     BoxLayout:
         orientation: "horizontal"
         size_hint_y: 5
         TextInput:
             text: ""
             size_hint_x: 90
+            focus: True
         Button:
             text: "検索"
             size_hint_x: 5
@@ -17,6 +19,12 @@
     BoxLayout:
         orientation: "horizontal"
         size_hint_y: 5
+        TagAlbumSpinner:
+            text: "タグ"
+            values: "タグ", "アルバム"
+        ListingShowSpinner:
+            text: "一覧"
+            values: "一覧", "表示"
         SortTypeSpinner:
             text: "ファイル名"
             values: "ファイル名", "更新日時", "いいね数"
@@ -27,12 +35,29 @@
             size_hint_x: 1
     BoxLayout:
         orientation: "horizontal"
-        text: "hoge"
         size_hint_y: 90
-        ScrollView:
-            size_hint_x: 2
-            TreeView:
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_x: 3
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: 5
+                Button:
+                    text: "追加"
+                Button:
+                    text: "削除"
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: 5
+                Label:
+                    text: "いいね >= "
+                TextInput:
+                    text: "0"
+            ScrollView:
                 size_hint_x: 1
+                size_hint_y: 95
+                TreeView:
+                    size_hint_x: 1
         BoxLayout:
             orientation: "vertical"
             size_hint_x: 10
@@ -41,7 +66,18 @@
                 size_hint_y: 100
             BoxLayout:
                 orientation: "horizontal"
-                size_hint_y: 16
+                size_hint_y: 8
+                Button:
+                    text: "左回転"
+                Button:
+                    text: "右回転"
+                Button:
+                    text: "★"
+                Button:
+                    text: "いいね！"
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: 20
                 Button:
                     text: "contents"
                     size_hint_x: 10
@@ -52,20 +88,6 @@
                         text: "保持"
                     Button:
                         text: "解除"
-            BoxLayout:
-                orientation: "horizontal"
-                size_hint_y: 8
-                Button:
-                    text: "左回転"
-                Button:
-                    text: "右回転"
-            BoxLayout:
-                orientation: "horizontal"
-                size_hint_y: 8
-                Button:
-                    text: "★"
-                Button:
-                    text: "いいね！"
         BoxLayout:
             orientation: "vertical"
             size_hint_x: 2
