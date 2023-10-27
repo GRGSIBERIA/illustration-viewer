@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="Images\add_circle.png" />
     <None Remove="Images\block.png" />
+    <None Remove="Images\delete_forever.png" />
     <None Remove="Images\recommend.png" />
     <None Remove="Images\rotate_left.png" />
     <None Remove="Images\rotate_right.png" />
@@ -25,6 +26,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\block.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\delete_forever.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\rotate_left.png">
