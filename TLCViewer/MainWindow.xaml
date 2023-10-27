@@ -33,6 +33,9 @@
             <Slider Width="80" Height="20"/>
             <Label Content="高さ" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Slider Width="80" Height="20"/>
+            <Label Content="拡縮" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Slider Width="80" Height="20" Value="1" Minimum="-5" Maximum="5"/>
+            <Label Content="1倍" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </ToolBar>
         <TabControl x:Name="tabControl">
             <TabItem Header="検索">
@@ -55,7 +58,65 @@
                         <TreeViewItem Header="選択中" x:Name="treeSelects"/>
                     </TreeView>
                     <Grid x:Name="listingImageGrid" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="Gray">
-                        
+                        <ScrollViewer>
+                            <StackPanel Orientation="Vertical">
+                                <UniformGrid Rows="1">
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                </UniformGrid>
+                                <UniformGrid Rows="1">
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                </UniformGrid>
+                                <UniformGrid Rows="1">
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                </UniformGrid>
+                                <UniformGrid Rows="1">
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                </UniformGrid>
+                                <UniformGrid Rows="1">
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                    <Button Width="128" Height="128">
+                                        <Image Source="/Images/star.png"/>
+                                    </Button>
+                                </UniformGrid>
+                            </StackPanel>
+                        </ScrollViewer>
                     </Grid>
                     <StackPanel Grid.Row="2" Grid.Column="1" Background="LightGray">
                         <local:BottomIcons/>
