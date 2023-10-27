@@ -9,7 +9,15 @@
     <DockPanel>
         <Menu x:Name="menu" DockPanel.Dock="Top">
             <MenuItem Header="ファイル(_F)"/>
-            <MenuItem Header="表示(_V)"/>
+            <MenuItem Header="表示(_V)">
+                <MenuItem Header="並べ替え">
+                    <MenuItem Header="更新日時"/>
+                    <MenuItem Header="名前"/>
+                    <MenuItem Header="いいね数"/>
+                    <MenuItem Header="昇順"/>
+                    <MenuItem Header="降順"/>
+                </MenuItem>
+            </MenuItem>
             <MenuItem Header="追加(_A)">
                 <MenuItem Header="アルバム"/>
                 <MenuItem Header="コレクション"/>
@@ -28,69 +36,59 @@
         </ToolBar>
         <TabControl x:Name="tabControl">
             <TabItem Header="検索">
-                <Grid Background="#FFE5E5E5" HorizontalAlignment="Stretch">
+                
+                <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="128"/>
+                        <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="128"/>
+                        <ColumnDefinition Width="0.4*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="160"/>
                         <RowDefinition Height="32"/>
                     </Grid.RowDefinitions>
                     <TreeView Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
-                        <TreeViewItem Header="アルバム" x:Name="TreeAlbums"/>
-                        <TreeViewItem Header="コレクション" x:Name="TreeCollections"/>
-                        <TreeViewItem Header="タグ" x:Name="TreeTags"/>
-                        <TreeViewItem Header="選択中" x:Name="TreeSelects"/>
+                        <TreeViewItem Header="アルバム" x:Name="treeAlbums"/>
+                        <TreeViewItem Header="コレクション" x:Name="treeCollections"/>
+                        <TreeViewItem Header="タグ" x:Name="treeTags"/>
+                        <TreeViewItem Header="選択中" x:Name="treeSelects"/>
                     </TreeView>
-                    <Grid x:Name="ListingImageGrid" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="Gray">
+                    <Grid x:Name="listingImageGrid" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="Gray">
                         
                     </Grid>
-                    <Grid Grid.Row="2" Grid.Column="1" Background="LightGray">
-                        <Grid.ColumnDefinitions>
-                            
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="32"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button>
-                                <Image x:Name="IconRotateRight" Source="/Images/rotate_right.png"/>
-                            </Button>
-                            <Button>
-                                <Image x:Name="IconRotateLeft" Source="/Images/rotate_left.png"/>
-                            </Button>
-                            <Button>
-                                <Image x:Name="IconStar" Source="/Images/star.png"/>
-                            </Button>
-                            <Button>
-                                <Image x:Name="IconThumbUp" Source="/Images/thumb_up.png"/>
-                            </Button>
-                            <Button>
-                                <Image x:Name="IconThumbDown" Source="/Images/thumb_down.png"/>
-                            </Button>
-                            <Button>
-                                <Image x:Name="IconAddCircle" Source="/Images/add_circle.png"/>
-                            </Button>
-                            <Button>
-                                <Image x:Name="IconAddBlock" Source="/Images/block.png"/>
-                            </Button>
-                            <Button>
-                                <Image x:Name="IconDeleteForever" Source="/Images/delete_forever.png"/>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel Grid.Row="2" Grid.Column="1" Background="LightGray">
+                        <local:BottomIcons/>
+                    </StackPanel>
                     <ListView Grid.Row="0" Grid.Column="2" Grid.RowSpan="1">
                     </ListView>
-                    <ListView Grid.Row="1" Grid.Column="2">
-                    </ListView>
+                    <Grid Grid.Row="1" Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="calcButton1" Content="1" Grid.Column="0" Grid.Row="2"/>
+                        <Button x:Name="calcButton2" Content="2" Grid.Column="1" Grid.Row="2"/>
+                        <Button x:Name="calcButton3" Content="3" Grid.Column="2" Grid.Row="2"/>
+                        <Button x:Name="calcButton4" Content="4" Grid.Column="0" Grid.Row="1"/>
+                        <Button x:Name="calcButton5" Content="5" Grid.Column="1" Grid.Row="1"/>
+                        <Button x:Name="calcButton6" Content="6" Grid.Column="2" Grid.Row="1"/>
+                        <Button x:Name="calcButton7" Content="7" Grid.Column="0" Grid.Row="0"/>
+                        <Button x:Name="calcButton8" Content="8" Grid.Column="1" Grid.Row="0"/>
+                        <Button x:Name="calcButton9" Content="9" Grid.Column="2" Grid.Row="0"/>
+                        <Button x:Name="calcButton0" Content="0" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"/>
+                        <Button x:Name="calcButtonPeriodHyphen" Content=".(-)" Grid.Column="2" Grid.Row="4"/>
+                    </Grid>
                     <Button Grid.Row="2" Grid.Column="2" Content="設定"/>
                 </Grid>
-            </TabItem>
-            <TabItem Header="表示">
-                <Grid Background="#FFE5E5E5"/>
+                
             </TabItem>
             <TabItem Header="コラージュ">
                 <Grid Background="#FFE5E5E5"/>
