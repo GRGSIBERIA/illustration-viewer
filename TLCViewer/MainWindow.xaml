@@ -23,6 +23,12 @@
                 <MenuItem Header="コレクション"/>
                 <MenuItem Header="タグ"/>
             </MenuItem>
+            <MenuItem Header="移動(_M)">
+                <MenuItem Header="次"/>
+                <MenuItem Header="前"/>
+                <MenuItem Header="最初"/>
+                <MenuItem Header="最後"/>
+            </MenuItem>
         </Menu>
         <ToolBar DockPanel.Dock="Top">
             <Label Content="検索" VerticalAlignment="Center"/>
@@ -37,7 +43,6 @@
         </ToolBar>
         <TabControl x:Name="tabControl">
             <TabItem Header="検索">
-                
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.4*"/>
@@ -147,7 +152,6 @@
                     </Grid>
                     <Button Grid.Row="2" Grid.Column="2" Content="設定"/>
                 </Grid>
-                
             </TabItem>
             <TabItem Header="コラージュ">
                 <Grid Background="#FFE5E5E5"/>
