@@ -16,18 +16,13 @@ using System.Windows.Shapes;
 namespace TLCViewer
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// ThumbButton.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ThumbButton : UserControl
     {
-        public MainWindow()
+        public ThumbButton()
         {
             InitializeComponent();
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            // SQLのコネクションを作る
         }
     }
 }
