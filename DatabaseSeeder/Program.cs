@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using System.Data.SqlClient;
+using System.Data.SQLite;
 
 
 namespace DatabaseSeeder
@@ -13,16 +13,15 @@ namespace DatabaseSeeder
     {
         static void Main(string[] args)
         {
-            var conn = new SqlConnection("Data Source=mydb.sqlite");
-            using (var command = conn.CreateCommand())
+            using (var conn = new SQLiteConnection("Data Source=mydb.sqlite"))
             {
                 conn.Open();
 
                 conn.Close();
             }
 
-
-            conn.Close();
+            Console.WriteLine("プログラムが修了しました");
+            Console.ReadLine();
         }
     }
 }
