@@ -6,11 +6,137 @@ using System.Threading.Tasks;
 using System.IO;
 
 using System.Data.SQLite;
+using System.Drawing;
 
 namespace DatabaseSeeder
 {
     internal class Program
     {
+        static private Bitmap ResizeBitmap(Bitmap original, int width, int height, System.Drawing.Drawing2D.InterpolationMode interpolationMode)
+        {
+            Bitmap bmpResize;
+            Bitmap bmpResizeColor;
+            Graphics graphics = null;
+
+            try
+            {
+                System.Drawing.Imaging.PixelFormat pf = original.PixelFormat;
+
+                if (original.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
+                {
+                    // モノクロの時は仮に24bitとする
+                    pf = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
+                }
+
+                bmpResizeColor = new Bitmap(width, height, pf);
+                var dstRect = new RectangleF(0, 0, width, height);
+                var srcRect = new RectangleF(-0.5f, -0.5f, original.Width, original.Height);
+                graphics = Graphics.FromImage(bmpResizeColor);
+                graphics.Clear(Color.Transparent);
+                graphics.InterpolationMode = interpolationMode;
+                graphics.DrawImage(original, dstRect, srcRect, GraphicsUnit.Pixel);
+
+            }
+            finally
+            {
+                if (graphics != null)
+                {
+                    graphics.Dispose();
+                }
+            }
+
+            if (original.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
+            {
+                // モノクロ画像のとき、24bit→8bitへ変換
+
+                // モノクロBitmapを確保
+                bmpResize = new Bitmap(
+                    bmpResizeColor.Width,
+                    bmpResizeColor.Height,
+                    System.Drawing.Imaging.PixelFormat.Format8bppIndexed
+                    );
+
+                var pal = bmpResize.Palette;
+                for (int i = 0; i < bmpResize.Palette.Entries.Length; i++)
+                {
+                    pal.Entries[i] = original.Palette.Entries[i];
+                }
+                bmpResize.Palette = pal;
+
+                // カラー画像のポインタへアクセス
+                var bmpDataColor = bmpResizeColor.LockBits(
+                        new Rectangle(0, 0, bmpResizeColor.Width, bmpResizeColor.Height),
+                        System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                        bmpResizeColor.PixelFormat
+                        );
+
+                // モノクロ画像のポインタへアクセス
+                var bmpDataMono = bmpResize.LockBits(
+                        new Rectangle(0, 0, bmpResize.Width, bmpResize.Height),
+                        System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                        bmpResize.PixelFormat
+                        );
+
+                int colorStride = bmpDataColor.Stride;
+                int monoStride = bmpDataMono.Stride;
+
+                unsafe
+                {
+                    var pColor = (byte*)bmpDataColor.Scan0;
+                    var pMono = (byte*)bmpDataMono.Scan0;
+                    for (int y = 0; y < bmpDataColor.Height; y++)
+                    {
+                        for (int x = 0; x < bmpDataColor.Width; x++)
+                        {
+                            // R,G,B同じ値のため、Bの値を代表してモノクロデータへ代入
+                            pMono[x + y * monoStride] = pColor[x * 3 + y * colorStride];
+                        }
+                    }
+                }
+
+                bmpResize.UnlockBits(bmpDataMono);
+                bmpResizeColor.UnlockBits(bmpDataColor);
+
+                //　解放
+                bmpResizeColor.Dispose();
+            }
+            else
+            {
+                // カラー画像のとき
+                bmpResize = bmpResizeColor;
+            }
+
+            return bmpResize;
+        }
+
+        static private Bitmap ResizeImageWhileMaintainingAspectRatio(
+            Bitmap sourceFile,
+            int width,
+            int height)
+        {
+            
+            // 変更倍率を取得する
+            float scale = Math.Min((float)width / (float)sourceFile.Width, (float)height / (float)sourceFile.Height);
+
+            // サイズ変更した画像を作成する
+            Bitmap bitmap = new Bitmap(width, height);
+
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                // 変更サイズを取得する
+                int widthToScale = (int)(sourceFile.Width * scale);
+                int heightToScale = (int)(sourceFile.Height * scale);
+
+                // 背景色を塗る
+                SolidBrush solidBrush = new SolidBrush(Color.Black);
+                graphics.FillRectangle(solidBrush, new RectangleF(0, 0, width, height));
+
+                // サイズ変更した画像に、左上を起点に変更する画像を描画する
+                graphics.DrawImage(sourceFile, 0, 0, widthToScale, heightToScale);
+            }
+            return bitmap;
+        }
+
         static void GenerateDatabase()
         {
             using (var conn = new SQLiteConnection("Data Source=mydb.sqlite"))
@@ -64,17 +190,35 @@ namespace DatabaseSeeder
                  */
 
                 var line = "";
+                var converter = new ImageConverter();
                 while ((line = reader.ReadLine()) != null)
                 {
                     var sep = line.Split(',');
                     var hash = sep[1];
                     var ext = sep[2];
+                    var length = int.Parse(sep[3]);
+                    var tags = sep[6].Split(' ');
 
                     // たまに存在しないファイルがある
                     if (!map.ContainsKey(hash)) continue;
-
                     var path = $"D:\\img\\{map[hash]}\\{hash}.{ext}";
 
+                    // ファイルを読み込む
+                    byte[] bytes_image;
+                    using (var file = new BinaryReader(File.OpenRead(path)))
+                    {
+                        bytes_image = file.ReadBytes(length);
+                    }
+
+                    // ビットマップとして読み込む
+                    Bitmap bitmap, thumbnail;
+                    byte[] bytes_thumbnail;
+                    using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
+                    {
+                        bitmap = new Bitmap(file);
+                    }
+                    thumbnail = ResizeImageWhileMaintainingAspectRatio(bitmap, 100, 100);
+                    bytes_thumbnail = (byte[])converter.ConvertTo(bitmap, typeof(byte[]));
                 }
             }
             Console.WriteLine("ファイルの取得が完了しました");
