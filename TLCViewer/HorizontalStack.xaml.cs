@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -16,18 +17,23 @@ using System.Windows.Shapes;
 namespace TLCViewer
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// HorizontalStack.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class HorizontalStack : UserControl
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+        ThumbButton[] thumbButtons;
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        public HorizontalStack()
         {
-            // SQLのコネクションを作る
+            thumbButtons = new ThumbButton[2];
+            
+            if (stack.Children.Contains(thumbButtons[0]))
+            {
+                stack.Children.Add(thumbButtons[0]);
+            }
+            
+
+            InitializeComponent();
         }
     }
 }

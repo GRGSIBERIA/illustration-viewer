@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="TLCViewer.BottomIcons"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <Button Width="32" Height="32">
+            <Image x:Name="iconRotateRight" Source="/Images/rotate_right.png"/>
+        </Button>
+        <Button Width="32" Height="32">
+            <Image x:Name="iconRotateLeft" Source="/Images/rotate_left.png"/>
+        </Button>
+        <Button Width="32" Height="32">
+            <Image x:Name="iconStar" Source="/Images/star.png"/>
+        </Button>
+        <Button Width="32" Height="32">
+            <Image x:Name="iconThumbUp" Source="/Images/thumb_up.png"/>
+        </Button>
+        <Button Width="32" Height="32">
+            <Image x:Name="iconThumbDown" Source="/Images/thumb_down.png"/>
+        </Button>
+        <Button Width="32" Height="32">
+            <Image x:Name="iconAddCircle" Source="/Images/add_circle.png"/>
+        </Button>
+        <Button Width="32" Height="32">
+            <Image x:Name="iconAddBlock" Source="/Images/block.png"/>
+        </Button>
+        <Button Width="32" Height="32">
+            <Image x:Name="iconDeleteForever" Source="/Images/delete_forever.png"/>
+        </Button>
+    </StackPanel>
+</UserControl>

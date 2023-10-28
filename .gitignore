@@ -160,3 +160,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 *.db
+TLCViewer/.vs/TLCViewer/DesignTimeBuild/.dtbcache.v2
+*.vsidx
+*.vsidx
+*.bin
+*.v2
