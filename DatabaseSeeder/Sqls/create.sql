@@ -7,6 +7,7 @@ create table if not exists pictures (
 	thumbnail blob not null,
 	sha1 text not null,
 	width integer not null,
+	ext text not null,
 	height integer not null,
 	import_path text not null,
 	saved_at text not null default (DATETIME('now', 'localtime')),
