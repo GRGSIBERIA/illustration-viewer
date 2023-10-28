@@ -31,8 +31,6 @@
             <Label Content="グリッド "/>
             <Label Content="幅" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Slider Width="80" Height="20"/>
-            <Label Content="高さ" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Slider Width="80" Height="20"/>
             <Label Content="拡縮" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Slider Width="80" Height="20" Value="1" Minimum="-5" Maximum="5"/>
             <Label Content="1倍" HorizontalAlignment="Center" VerticalAlignment="Center"/>
