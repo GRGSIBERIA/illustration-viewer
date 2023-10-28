@@ -166,3 +166,6 @@ TLCViewer/.vs/TLCViewer/DesignTimeBuild/.dtbcache.v2
 *.bin
 *.v2
 *.vsidx
+sqlite-tools-win32-x64-202310241106/sqldiff.exe
+sqlite-tools-win32-x64-202310241106/sqlite3.exe
+sqlite-tools-win32-x64-202310241106/sqlite3_analyzer.exe
