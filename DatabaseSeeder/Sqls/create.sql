@@ -6,8 +6,8 @@ create table if not exists pictures (
 	picture blob not null,
 	thumbnail blob not null,
 	sha1 text not null,
-	width integer not null,
 	ext text not null,
+	width integer not null,
 	height integer not null,
 	import_path text not null,
 	saved_at text not null default (DATETIME('now', 'localtime')),
@@ -29,6 +29,7 @@ create table if not exists tags (
 create unique index if not exists tags_idname_idx on tags(id, name);
 create unique index if not exists tags_idparent_idx on tags(id, parent_id);
 
+insert into tags(name) values ('Root');
 
 /* アルバム */
 create table if not exists albums (
