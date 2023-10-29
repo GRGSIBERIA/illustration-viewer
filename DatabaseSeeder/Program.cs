@@ -205,6 +205,12 @@ namespace DatabaseSeeder
                             Console.WriteLine($"{id:#,0}件目までのデータです");
                         }
 
+                        // 足きり
+                        if (id % 4000 == 0)
+                        {
+                            break;
+                        }
+
                         // ファイルを読み込む
                         byte[] bytes_image;
                         try
@@ -239,7 +245,15 @@ namespace DatabaseSeeder
                         var long_side = Math.Max(bitmap.Width, bitmap.Height);
                         var powW = (double)bitmap.Width / long_side * 100;
                         var powH = (double)bitmap.Height / long_side * 100;
-                        thumbnail = ResizeBitmap(bitmap, (int)powW, (int)powH, System.Drawing.Drawing2D.InterpolationMode.High);
+                        try
+                        {
+                            thumbnail = ResizeBitmap(bitmap, (int)powW, (int)powH, System.Drawing.Drawing2D.InterpolationMode.High);
+                        }
+                        catch
+                        {
+                            // 無効な画像サイズ対策
+                            continue;
+                        }
                         thumbnail.Save("./tmp.jpg");    // tmpファイルとしてjpegを書き出す
 
                         var picture_info = new FileInfo(path);
