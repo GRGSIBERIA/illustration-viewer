@@ -7,6 +7,7 @@ using System.IO;
 
 using System.Data.SQLite;
 using System.Drawing;
+using System.Security.Cryptography;
 
 namespace DatabaseSeeder
 {
@@ -111,7 +112,7 @@ namespace DatabaseSeeder
 
         static void GenerateDatabase()
         {
-            using (var conn = new SQLiteConnection("Data Source=mydb.sqlite"))
+            using (var conn = new SQLiteConnection("Data Source=E:\\danbooru\\database.sqlite"))
             {
                 conn.Open();
 
@@ -133,6 +134,8 @@ namespace DatabaseSeeder
 
         static void Seeding()
         {
+            var conn = new SQLiteConnection("Data Source=E:\\danbooru\\database.sqlite");
+
             Dictionary<string, int> map = new Dictionary<string, int>();
 
             Console.WriteLine("ファイル一覧を取得");
@@ -147,62 +150,139 @@ namespace DatabaseSeeder
             }
             Console.WriteLine("ファイルをマップに変換");
 
-            Console.WriteLine("CSVファイルを展開");
-            using (var reader = new StreamReader("D:\\mongo.csv"))
+            conn.Open();
+
+            using (var transaction = conn.BeginTransaction()) 
             {
-                /*
-                 * [0] 1,
-                 * [1] d34e4cf0a437a5d65f8e82b7bcd02606,
-                 * [2] jpg,
-                 * [3] 127238,
-                 * [4] 459,
-                 * [5] 650,
-                 * [6] 1girl ;p animal_ears bangs blue_bow blue_panties blue_ribbon blush bow bow_panties breasts brown_eyes cat_ears cat_girl cat_tail collarbone cowboy_shot eyebrows eyebrows_visible_through_hair kemonomimi_mode kousaka_tamaki kyougoku_shin large_breasts long_hair long_sleeves looking_at_viewer no_pants one_eye_closed orange_background panties red_hair ribbon school_uniform serafuku smile solo standing striped striped_background striped_panties tail thigh_gap thighhighs thighs to_heart_2 tongue tongue_out underwear very_long_hair white_legwear,
-                 * [7] /data/__kousaka_tamaki_to_heart_2_drawn_by_kyougoku_shin__d34e4cf0a437a5d65f8e82b7bcd02606.jpg
-                 */
-
-                var line = "";
-                while ((line = reader.ReadLine()) != null)
+                Console.WriteLine("トランザクション開始");
+                transaction.Rollback();
+                Console.WriteLine("古いトランザクションをロールバックで削除");
+                Console.WriteLine("CSVファイルを展開");
+                using (var reader = new StreamReader("D:\\mongo.csv"))
                 {
-                    var sep = line.Split(',');
-                    var hash = sep[1];
-                    var ext = sep[2];
-                    var length = int.Parse(sep[3]);
-                    var tags = sep[6].Split(' ');
+                    /*
+                     * [0] 1,
+                     * [1] d34e4cf0a437a5d65f8e82b7bcd02606,
+                     * [2] jpg,
+                     * [3] 127238,
+                     * [4] 459,
+                     * [5] 650,
+                     * [6] 1girl ;p animal_ears bangs blue_bow blue_panties blue_ribbon blush bow bow_panties breasts brown_eyes cat_ears cat_girl cat_tail collarbone cowboy_shot eyebrows eyebrows_visible_through_hair kemonomimi_mode kousaka_tamaki kyougoku_shin large_breasts long_hair long_sleeves looking_at_viewer no_pants one_eye_closed orange_background panties red_hair ribbon school_uniform serafuku smile solo standing striped striped_background striped_panties tail thigh_gap thighhighs thighs to_heart_2 tongue tongue_out underwear very_long_hair white_legwear,
+                     * [7] /data/__kousaka_tamaki_to_heart_2_drawn_by_kyougoku_shin__d34e4cf0a437a5d65f8e82b7bcd02606.jpg
+                     */
 
-                    // たまに存在しないファイルがある
-                    if (!map.ContainsKey(hash)) continue;
-                    var path = $"D:\\img\\{map[hash]}\\{hash}.{ext}";
-
-                    // ファイルを読み込む
-                    byte[] bytes_image;
-                    using (var file = new BinaryReader(File.OpenRead(path)))
+                    var line = "";
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        bytes_image = file.ReadBytes(length);
-                    }
+                        var sep = line.Split(',');
+                        var hash = sep[1];
+                        var ext = sep[2];
+                        var length = int.Parse(sep[3]);
+                        var tags = sep[6].Split(' ');
 
-                    // ビットマップとして読み込む
-                    Bitmap bitmap, thumbnail;
-                    byte[] bytes_thumbnail;
-                    using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
-                    {
-                        bitmap = new Bitmap(file);
-                    }
-                    var long_side = Math.Min(bitmap.Width, bitmap.Height);
-                    var powW = bitmap.Width / long_side * 100;
-                    var powH = bitmap.Height / long_side * 100;
-                    thumbnail = ResizeBitmap(bitmap, (int)powW, (int)powH, System.Drawing.Drawing2D.InterpolationMode.High);
+                        // たまに存在しないファイルがある
+                        if (!map.ContainsKey(hash)) continue;
+                        var path = $"D:\\img\\{map[hash]}\\{hash}.{ext}";
 
-                    var converter = new ImageConverter();
-                    bytes_thumbnail = (byte[])converter.ConvertTo(bitmap, typeof(byte[]));
+                        // ファイルを読み込む
+                        byte[] bytes_image;
+                        try
+                        {
+                            using (var file = new BinaryReader(File.OpenRead(path)))
+                            {
+                                bytes_image = file.ReadBytes(length);
+                            }
+                        }
+                        catch
+                        {
+                            // ファイルが存在しない
+                            continue;
+                        }
+
+                        // ビットマップとして読み込む
+                        Bitmap bitmap, thumbnail;
+                        byte[] bytes_thumbnail;
+                        using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        {
+                            bitmap = new Bitmap(file);
+                        }
+                        // アスペクト比を計算して単位長さに縮小する
+                        var long_side = Math.Min(bitmap.Width, bitmap.Height);
+                        var powW = (double)bitmap.Width / long_side * 100;
+                        var powH = (double)bitmap.Height / long_side * 100;
+                        thumbnail = ResizeBitmap(bitmap, (int)powW, (int)powH, System.Drawing.Drawing2D.InterpolationMode.High);
+                        thumbnail.Save("./tmp.jpg");    // tmpファイルとしてjpegを書き出す
+
+                        var picture_info = new FileInfo(path);
+                        var fileinfo = new FileInfo("./tmp.jpg");
+
+                        // JPEGになったサムネイルのバイト列を取得する
+                        using (var tmp = new BinaryReader(File.OpenRead("./tmp.jpg")))
+                        {
+                            bytes_thumbnail = tmp.ReadBytes((int)fileinfo.Length);
+                        }
+
+                        // insert文を実行する
+                        var sql = "";
+                        using (var com = new StreamReader("./Sqls/insert_picture.sql"))
+                        {
+                            sql = com.ReadToEnd();
+                        }
+
+                        using (var command = conn.CreateCommand())
+                        {
+                            command.CommandText = sql;
+                            command.Parameters.Add(new SQLiteParameter("@picture", bytes_image));
+                            command.Parameters.Add(new SQLiteParameter("@thumbnail", bytes_thumbnail));
+                            command.Parameters.Add(new SQLiteParameter("@sha1", hash));
+                            command.Parameters.Add(new SQLiteParameter("@ext", ext));
+                            command.Parameters.Add(new SQLiteParameter("@width", bitmap.Width));
+                            command.Parameters.Add(new SQLiteParameter("@height", bitmap.Height));
+                            command.Parameters.Add(new SQLiteParameter("@import_path", path));
+                            command.Parameters.Add(new SQLiteParameter("@created_at", picture_info.CreationTime.ToString()));
+                            command.Parameters.Add(new SQLiteParameter("@saved_at", DateTime.Now.ToString()));
+                            var result = command.ExecuteNonQuery();
+                        }
+                        using (var command = conn.CreateCommand())
+                        {
+                            command.CommandText = "insert into tag2pic(tag_id, pic_id) values (1, pic_id);";
+                        }
+                    }
+                    transaction.Commit();
                 }
+                Console.WriteLine("画像の挿入が完了しました");
             }
+            Console.WriteLine("ルートのタグを挿入します");
+
+            using (var transaction = conn.BeginTransaction())
+            {
+                int maxid = 0;
+                using (var command = conn.CreateCommand())
+                {
+                    command.CommandText = "select max(id) from pictures limit 1;";
+                    maxid = (int)command.ExecuteScalar();
+                }
+
+                for (int i = 1; i < maxid + 1; ++i)
+                {
+                    using (var command = conn.CreateCommand())
+                    {
+                        command.CommandText = "inset into tag2pic(tag_id, pic_id) values (@tag_id, @pic_id)";
+                        command.Parameters.Add(new SQLiteParameter("@tag_id", 1));
+                        command.Parameters.Add(new SQLiteParameter("@pic_id", i));
+                        command.ExecuteNonQuery();
+                    }
+                }
+                transaction.Commit();
+                Console.WriteLine("ルートタグの挿入を完了しました");
+            }
+
             Console.WriteLine("ファイルの取得が完了しました");
         }
 
         static void DropDatabase()
         {
-            using (var conn = new SQLiteConnection("Data Source=mydb.sqlite"))
+            using (var conn = new SQLiteConnection("Data Source=E:\\danbooru\\database.sqlite"))
             {
                 conn.Open();
 
