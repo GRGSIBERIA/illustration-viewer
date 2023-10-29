@@ -176,6 +176,25 @@ namespace DatabaseSeeder
 
                 using (var transaction = conn.BeginTransaction())
                 {
+                    long maxid = 0;
+                    long count = 1;
+                    using (var command = new SQLiteCommand("select max(id) from pictures limit 1;", conn))
+                    {
+                        
+                        var obj = command.ExecuteScalar();
+
+                        if (obj != null)
+                        {
+                            maxid = (long)obj;
+                            Console.WriteLine($"{maxid:#,7}件のデータまでスキップします");
+                        }
+                        else
+                        {
+                            Console.WriteLine("まだデータが挿入されていません");
+                        }
+                        
+                    }
+
                     var line = "";
                     while ((line = reader.ReadLine()) != null)
                     {
@@ -192,11 +211,16 @@ namespace DatabaseSeeder
                         var length = (int)new FileInfo(map[hash]).Length;
                         var tags = sep[6].Split(' ');
 
-                        // 足きりする番号
-                        if (id % 20000 == 0)
+
+                        if (maxid >= count)
                         {
-                            Console.WriteLine($"{id + 1:#,7}件目までのデータです");
-                            break;
+                            ++count;
+                            continue;
+                        }
+
+                        if (id % 1000 == 0)
+                        {
+                            Console.WriteLine($"{id:#,0}件目までのデータです");
                         }
 
                         // ファイルを読み込む
@@ -230,7 +254,7 @@ namespace DatabaseSeeder
                             }
                         }
                         // アスペクト比を計算して単位長さに縮小する
-                        var long_side = Math.Min(bitmap.Width, bitmap.Height);
+                        var long_side = Math.Max(bitmap.Width, bitmap.Height);
                         var powW = (double)bitmap.Width / long_side * 100;
                         var powH = (double)bitmap.Height / long_side * 100;
                         thumbnail = ResizeBitmap(bitmap, (int)powW, (int)powH, System.Drawing.Drawing2D.InterpolationMode.High);
@@ -263,9 +287,12 @@ namespace DatabaseSeeder
                             }
                             catch
                             {
-                                Console.WriteLine($"既に存在するオブジェクトです: {hash}");
+                                //Console.WriteLine($"既に存在するオブジェクトです: {hash}");
                             }
                         }
+
+                        // 最後にカウントを動かす
+                        ++count;
                     }
                     transaction.Commit();
                     Console.WriteLine("画像の挿入が完了しました");
@@ -289,7 +316,7 @@ namespace DatabaseSeeder
                     maxid = (int)command.ExecuteScalar();
                 }
 
-                for (int i = 1; i < maxid + 1; ++i)
+                for (int i = 1; i <= maxid; ++i)
                 {
                     using (var command = conn.CreateCommand())
                     {
