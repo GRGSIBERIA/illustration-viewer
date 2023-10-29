@@ -190,7 +190,6 @@ namespace DatabaseSeeder
                  */
 
                 var line = "";
-                var converter = new ImageConverter();
                 while ((line = reader.ReadLine()) != null)
                 {
                     var sep = line.Split(',');
@@ -217,7 +216,12 @@ namespace DatabaseSeeder
                     {
                         bitmap = new Bitmap(file);
                     }
-                    thumbnail = ResizeImageWhileMaintainingAspectRatio(bitmap, 100, 100);
+                    var long_side = Math.Min(bitmap.Width, bitmap.Height);
+                    var powW = bitmap.Width / long_side * 100;
+                    var powH = bitmap.Height / long_side * 100;
+                    thumbnail = ResizeBitmap(bitmap, (int)powW, (int)powH, System.Drawing.Drawing2D.InterpolationMode.High);
+
+                    var converter = new ImageConverter();
                     bytes_thumbnail = (byte[])converter.ConvertTo(bitmap, typeof(byte[]));
                 }
             }
