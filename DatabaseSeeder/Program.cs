@@ -192,9 +192,11 @@ namespace DatabaseSeeder
                         var length = (int)new FileInfo(map[hash]).Length;
                         var tags = sep[6].Split(' ');
 
-                        if (id % 1000 == 0)
+                        // 足きりする番号
+                        if (id % 20000 == 0)
                         {
-                            Console.WriteLine($"{id + 1}件目までのデータです");
+                            Console.WriteLine($"{id + 1:#,7}件目までのデータです");
+                            break;
                         }
 
                         // ファイルを読み込む
