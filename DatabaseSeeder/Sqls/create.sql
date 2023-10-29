@@ -5,7 +5,7 @@ create table if not exists pictures (
 	id integer primary key autoincrement not null,
 	picture blob not null,
 	thumbnail blob not null,
-	sha1 text not null,
+	sha1 text not null unique,
 	ext text not null,
 	width integer not null,
 	height integer not null,
@@ -16,7 +16,7 @@ create table if not exists pictures (
 create unique index if not exists pictures_idpk_idx on pictures(id);
 create index if not exists pictures_savedid_idx on pictures(id, saved_at);
 create index if not exists pictures_createdid_idx on pictures(id, created_at);
-create index if not exists pictures_sha1_idx on pictures(sha1);
+create unique index if not exists pictures_sha1_idx on pictures(sha1);
 
 
 /* タグ */
