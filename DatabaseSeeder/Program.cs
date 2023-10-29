@@ -176,25 +176,6 @@ namespace DatabaseSeeder
 
                 using (var transaction = conn.BeginTransaction())
                 {
-                    long maxid = 0;
-                    long count = 1;
-                    using (var command = new SQLiteCommand("select max(id) from pictures limit 1;", conn))
-                    {
-                        
-                        var obj = command.ExecuteScalar();
-
-                        if (obj != null)
-                        {
-                            maxid = (long)obj;
-                            Console.WriteLine($"{maxid:#,7}件のデータまでスキップします");
-                        }
-                        else
-                        {
-                            Console.WriteLine("まだデータが挿入されていません");
-                        }
-                        
-                    }
-
                     var line = "";
                     while ((line = reader.ReadLine()) != null)
                     {
@@ -211,12 +192,13 @@ namespace DatabaseSeeder
                         var length = (int)new FileInfo(map[hash]).Length;
                         var tags = sep[6].Split(' ');
 
-
-                        if (maxid >= count)
+                        using (var command = new SQLiteCommand("select id from pictures where sha1 = @hash limit 1;", conn))
                         {
-                            ++count;
-                            continue;
+                            command.Parameters.Add(new SQLiteParameter("@hash", hash));
+                            var obj = command.ExecuteScalar();
+                            if (obj != null) continue;
                         }
+
 
                         if (id % 1000 == 0)
                         {
@@ -290,9 +272,6 @@ namespace DatabaseSeeder
                                 //Console.WriteLine($"既に存在するオブジェクトです: {hash}");
                             }
                         }
-
-                        // 最後にカウントを動かす
-                        ++count;
                     }
                     transaction.Commit();
                     Console.WriteLine("画像の挿入が完了しました");
