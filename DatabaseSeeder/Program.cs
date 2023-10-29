@@ -109,34 +109,6 @@ namespace DatabaseSeeder
             return bmpResize;
         }
 
-        static private Bitmap ResizeImageWhileMaintainingAspectRatio(
-            Bitmap sourceFile,
-            int width,
-            int height)
-        {
-            
-            // 変更倍率を取得する
-            float scale = Math.Min((float)width / (float)sourceFile.Width, (float)height / (float)sourceFile.Height);
-
-            // サイズ変更した画像を作成する
-            Bitmap bitmap = new Bitmap(width, height);
-
-            using (Graphics graphics = Graphics.FromImage(bitmap))
-            {
-                // 変更サイズを取得する
-                int widthToScale = (int)(sourceFile.Width * scale);
-                int heightToScale = (int)(sourceFile.Height * scale);
-
-                // 背景色を塗る
-                SolidBrush solidBrush = new SolidBrush(Color.Black);
-                graphics.FillRectangle(solidBrush, new RectangleF(0, 0, width, height));
-
-                // サイズ変更した画像に、左上を起点に変更する画像を描画する
-                graphics.DrawImage(sourceFile, 0, 0, widthToScale, heightToScale);
-            }
-            return bitmap;
-        }
-
         static void GenerateDatabase()
         {
             using (var conn = new SQLiteConnection("Data Source=mydb.sqlite"))
