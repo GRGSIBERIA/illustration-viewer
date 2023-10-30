@@ -285,6 +285,7 @@ namespace DatabaseSeeder
                             catch
                             {
                                 //Console.WriteLine($"既に存在するオブジェクトです: {hash}");
+                                continue;
                             }
                         }
                     }
@@ -386,6 +387,7 @@ namespace DatabaseSeeder
                                 catch
                                 {
                                     // 既存のタグが追加された
+                                    continue;
                                 }
                             }
                         }
@@ -433,6 +435,16 @@ namespace DatabaseSeeder
                             var sep = line.Split(',');
                             var id = long.Parse(sep[0]);
                             var tags = sep[6].Split(' ');
+                            var hash = sep[1];
+
+                            using (var command = new SQLiteCommand("select id from pictures where sha1 = @hash limit 1;", conn))
+                            {
+                                command.Parameters.Add(new SQLiteParameter("@hash", hash));
+
+                                var obj = command.ExecuteScalar();
+                                if (obj == null) continue;
+                                id = (long)obj;
+                            }
 
                             foreach (var tag in tags)
                             {
@@ -447,7 +459,7 @@ namespace DatabaseSeeder
                                     }
                                     catch
                                     {
-
+                                        continue;
                                     }
                                 }
                             }
