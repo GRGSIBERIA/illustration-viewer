@@ -353,9 +353,8 @@ namespace DatabaseSeeder
 
                 for (int i = 1; i <= maxid; ++i)
                 {
-                    using (var command = conn.CreateCommand())
+                    using (var command = new SQLiteCommand("inset into tag2pic(tag_id, pic_id) values (@tag_id, @pic_id);", conn))
                     {
-                        command.CommandText = "inset into tag2pic(tag_id, pic_id) values (@tag_id, @pic_id)";
                         command.Parameters.Add(new SQLiteParameter("@tag_id", 1));
                         command.Parameters.Add(new SQLiteParameter("@pic_id", i));
                         command.ExecuteNonQuery();
