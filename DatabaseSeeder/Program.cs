@@ -162,6 +162,26 @@ namespace DatabaseSeeder
                 insert_sql = com.ReadToEnd();
             }
 
+            using (var command = new SQLiteCommand("select max(id) from pictures;", conn))
+            {
+                var obj = command.ExecuteScalar();
+                if (obj != null)
+                {
+                    var id = (long)obj;
+                    Console.WriteLine($"現在挿入されている最大IDは{id}件です");
+                }
+                else
+                {
+                    Console.WriteLine("まだデータは挿入されていません");
+                }
+            }
+
+            Console.WriteLine("N万件のデータを挿入します。Nを入力してください");
+
+            long id10k;
+            var id10kStr = Console.ReadLine();
+            while (!long.TryParse(id10kStr, out id10k)) ;
+
             using (var reader = new StreamReader(MongoSource))
             {
                 /*
@@ -207,7 +227,7 @@ namespace DatabaseSeeder
                         }
 
                         // 足きり
-                        if (id % (15 * 10000) == 0)
+                        if (id % (id10k * 10000) == 0)
                         {
                             break;
                         }
