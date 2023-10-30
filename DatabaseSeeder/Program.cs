@@ -15,6 +15,7 @@ namespace DatabaseSeeder
     internal class Program
     {
         private static string DataSource = "Data Source=E:\\danbooru\\database.sqlite";
+        private static string MongoSource = "D:\\mongo.csv";
         static private Bitmap ResizeBitmap(Bitmap original, int width, int height, System.Drawing.Drawing2D.InterpolationMode interpolationMode)
         {
             Bitmap bmpResize;
@@ -161,18 +162,18 @@ namespace DatabaseSeeder
                 insert_sql = com.ReadToEnd();
             }
 
-            using (var reader = new StreamReader("D:\\mongo.csv"))
+            using (var reader = new StreamReader(MongoSource))
             {
                 /*
-                    * [0] 1,
-                    * [1] d34e4cf0a437a5d65f8e82b7bcd02606,
-                    * [2] jpg,
-                    * [3] 127238,
-                    * [4] 459,
-                    * [5] 650,
-                    * [6] 1girl ;p animal_ears bangs blue_bow blue_panties blue_ribbon blush bow bow_panties breasts brown_eyes cat_ears cat_girl cat_tail collarbone cowboy_shot eyebrows eyebrows_visible_through_hair kemonomimi_mode kousaka_tamaki kyougoku_shin large_breasts long_hair long_sleeves looking_at_viewer no_pants one_eye_closed orange_background panties red_hair ribbon school_uniform serafuku smile solo standing striped striped_background striped_panties tail thigh_gap thighhighs thighs to_heart_2 tongue tongue_out underwear very_long_hair white_legwear,
-                    * [7] /data/__kousaka_tamaki_to_heart_2_drawn_by_kyougoku_shin__d34e4cf0a437a5d65f8e82b7bcd02606.jpg
-                    */
+                * [0] 1,
+                * [1] d34e4cf0a437a5d65f8e82b7bcd02606,
+                * [2] jpg,
+                * [3] 127238,
+                * [4] 459,
+                * [5] 650,
+                * [6] 1girl ;p animal_ears bangs blue_bow blue_panties blue_ribbon blush bow bow_panties breasts brown_eyes cat_ears cat_girl cat_tail collarbone cowboy_shot eyebrows eyebrows_visible_through_hair kemonomimi_mode kousaka_tamaki kyougoku_shin large_breasts long_hair long_sleeves looking_at_viewer no_pants one_eye_closed orange_background panties red_hair ribbon school_uniform serafuku smile solo standing striped striped_background striped_panties tail thigh_gap thighhighs thighs to_heart_2 tongue tongue_out underwear very_long_hair white_legwear,
+                * [7] /data/__kousaka_tamaki_to_heart_2_drawn_by_kyougoku_shin__d34e4cf0a437a5d65f8e82b7bcd02606.jpg
+                */
 
                 using (var transaction = conn.BeginTransaction())
                 {
@@ -180,7 +181,7 @@ namespace DatabaseSeeder
                     while ((line = reader.ReadLine()) != null)
                     {
                         var sep = line.Split(',');
-                        var id = int.Parse(sep[0]);
+                        var id = long.Parse(sep[0]);
                         var hash = sep[1];
                         if (!map.ContainsKey(hash))
                         {
@@ -189,7 +190,7 @@ namespace DatabaseSeeder
                         }
                         var path = map[hash];
                         var ext = map[hash].Split('.').Last();
-                        var length = (int)new FileInfo(map[hash]).Length;
+                        var length = new FileInfo(map[hash]).Length;
                         var tags = sep[6].Split(' ');
 
                         using (var command = new SQLiteCommand("select id from pictures where sha1 = @hash limit 1;", conn))
@@ -202,11 +203,11 @@ namespace DatabaseSeeder
 
                         if (id % 1000 == 0)
                         {
-                            Console.WriteLine($"{id:#,0}件目までのデータです");
+                            Console.WriteLine($"{id,7}件目までのデータです");
                         }
 
                         // 足きり
-                        if (id % 4000 == 0)
+                        if (id % (15 * 10000) == 0)
                         {
                             break;
                         }
@@ -217,7 +218,7 @@ namespace DatabaseSeeder
                         {
                             using (var file = new BinaryReader(File.OpenRead(path)))
                             {
-                                bytes_image = file.ReadBytes(length);
+                                bytes_image = file.ReadBytes((int)length);
                             }
                         }
                         catch
@@ -337,17 +338,22 @@ namespace DatabaseSeeder
                 Console.WriteLine("トランザクションを開始します");
                 transaction.Rollback();
                 Console.WriteLine("不要なジャーナルをロールバックします");
-                Console.WriteLine("CSVファイルを読み込みます");
+
+                var tagSql = "";
+                using (var r = new StreamReader("./Sqls/insert_tag.sql"))
+                {
+                    tagSql = r.ReadToEnd();
+                }
 
                 var line = "";
-                using (var reader = new StreamReader("D:\\mongo.csv"))
+                using (var reader = new StreamReader(MongoSource))
                 {
                     while ((line = reader.ReadLine()) != null)
                     {
                         var sep = line.Split(',');
                         var hash = sep[1];
                         var tags = sep[6].Split(' ');
-                        int id = 0;
+                        long id = 0;
 
                         // データベース上のIDを特定する
                         try
@@ -358,7 +364,7 @@ namespace DatabaseSeeder
                                 command.Parameters.Add(new SQLiteParameter("@hash", hash));
                                 var obj = command.ExecuteScalar();
                                 if (obj == null) continue;  // ファイルが存在しない
-                                id = (int)obj;
+                                id = (long)obj;
                             }
                         }
                         catch
@@ -368,21 +374,19 @@ namespace DatabaseSeeder
                         }
 
                         // タグを追加する
-                        var sql = "";
-                        using (var r = new StreamReader("./Sqls/insert_tag2pic_with_name.sql"))
-                        {
-                            sql = r.ReadToEnd();
-                        }
-                        
-                        // タグを画像にアサインする
                         for (int i = 0; i < tags.Length; ++i)
                         {
-                            using (var command = conn.CreateCommand())
-                            { 
-                                command.CommandText = sql;
+                            using (var command = new SQLiteCommand(tagSql, conn))
+                            {
                                 command.Parameters.Add(new SQLiteParameter("@name", tags[i]));
-                                command.Parameters.Add(new SQLiteParameter("@pic_id", id));
-                                command.ExecuteNonQuery();
+                                try
+                                {
+                                    command.ExecuteNonQuery();
+                                }
+                                catch
+                                {
+                                    // 既存のタグが追加された
+                                }
                             }
                         }
                     }
@@ -392,6 +396,70 @@ namespace DatabaseSeeder
                 transaction.Commit();
             }
             Console.WriteLine("マイグレーションを終了します");
+        }
+
+        static void MigrateTag2Pic()
+        {
+            using (var conn = new SQLiteConnection(DataSource))
+            {
+                Console.WriteLine("コネクションを確立しました");
+                conn.Open();
+                Console.WriteLine("コネクションをオープンします");
+
+                using (var transaction =  conn.BeginTransaction())
+                {
+                    Console.WriteLine("トランザクションを開始します");
+                    using (var reader = new StreamReader(MongoSource))
+                    {
+                        /*
+                        * [0] 1,
+                        * [1] d34e4cf0a437a5d65f8e82b7bcd02606,
+                        * [2] jpg,
+                        * [3] 127238,
+                        * [4] 459,
+                        * [5] 650,
+                        * [6] 1girl ;p animal_ears bangs blue_bow blue_panties blue_ribbon blush bow bow_panties breasts brown_eyes cat_ears cat_girl cat_tail collarbone cowboy_shot eyebrows eyebrows_visible_through_hair kemonomimi_mode kousaka_tamaki kyougoku_shin large_breasts long_hair long_sleeves looking_at_viewer no_pants one_eye_closed orange_background panties red_hair ribbon school_uniform serafuku smile solo standing striped striped_background striped_panties tail thigh_gap thighhighs thighs to_heart_2 tongue tongue_out underwear very_long_hair white_legwear,
+                        * [7] /data/__kousaka_tamaki_to_heart_2_drawn_by_kyougoku_shin__d34e4cf0a437a5d65f8e82b7bcd02606.jpg
+                        */
+                        var tag2picSql = "";
+                        using (var r = new StreamReader("./Sqls/insert_tag2pic_with_name.sql"))
+                        {
+                            tag2picSql = r.ReadToEnd();
+                        }
+
+                        var line = "";
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            var sep = line.Split(',');
+                            var id = long.Parse(sep[0]);
+                            var tags = sep[6].Split(' ');
+
+                            foreach (var tag in tags)
+                            {
+                                using (var command = new SQLiteCommand(tag2picSql, conn))
+                                {
+                                    command.Parameters.Add(new SQLiteParameter("@name", tag));
+                                    command.Parameters.Add(new SQLiteParameter("@pic_id", id));
+                                    
+                                    try
+                                    {
+                                        command.ExecuteNonQuery();
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    transaction.Commit();
+                    Console.WriteLine("トランザクションをコミットしました");
+                }
+
+                conn.Clone();
+                Console.WriteLine("コネクションを閉じました");
+            }
         }
 
         static void DropDatabase()
@@ -427,9 +495,10 @@ namespace DatabaseSeeder
         {
             Console.WriteLine("モードを切り替えます");
             Console.WriteLine("1. データベース作成");
-            Console.WriteLine("2. 画像とルートタグの設定");
-            Console.WriteLine("3. 画像にタグ付けを行う");
-            Console.WriteLine("4. データベースをdropする");
+            Console.WriteLine("2. 画像の設定");
+            Console.WriteLine("3. ルートタグの設定");
+            Console.WriteLine("4. 画像にタグ付けを行う");
+            Console.WriteLine("5. データベースをdropする");
             var s = Console.ReadLine();
             
             switch (s)
@@ -444,6 +513,9 @@ namespace DatabaseSeeder
                     MigrateTags();
                     break;
                 case "4":
+                    MigrateTag2Pic();
+                    break;
+                case "5":
                     DropDatabase();
                     break;
                 default:
