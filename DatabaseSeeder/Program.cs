@@ -135,6 +135,21 @@ namespace DatabaseSeeder
             }
         }
 
+        static void DumpFiles()
+        {
+            using (var writer = new StreamWriter("D:\\dump_files.csv"))
+            {
+                for (int i = 0; i < 180; ++i)
+                {
+                    var img_files = Directory.GetFiles($"D:\\img\\{i}\\", "*");
+                    foreach (var file in img_files)
+                    {
+                        writer.WriteLine(file);
+                    }
+                }
+            }
+        }
+
         static void SeedingPicture()
         {
             var conn = new SQLiteConnection(DataSource);
@@ -526,6 +541,7 @@ namespace DatabaseSeeder
         static void Main(string[] args)
         {
             Console.WriteLine("モードを切り替えます");
+            Console.WriteLine("0. ファイル一覧をダンプする");
             Console.WriteLine("1. データベース作成");
             Console.WriteLine("2. 画像の設定");
             Console.WriteLine("3. ルートタグの設定");
@@ -535,6 +551,9 @@ namespace DatabaseSeeder
             
             switch (s)
             {
+                case "0":
+                    DumpFiles();
+                    break;
                 case "1":
                     GenerateDatabase();
                     break;
