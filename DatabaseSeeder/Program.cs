@@ -16,6 +16,9 @@ namespace DatabaseSeeder
     {
         private static string DataSource = "Data Source=E:\\danbooru\\database.sqlite";
         private static string MongoSource = "D:\\mongo.csv";
+        static private string DumpFilesPath = "D:\\dump_files.csv";
+
+
         static private Bitmap ResizeBitmap(Bitmap original, int width, int height, System.Drawing.Drawing2D.InterpolationMode interpolationMode)
         {
             Bitmap bmpResize;
@@ -135,9 +138,11 @@ namespace DatabaseSeeder
             }
         }
 
+
         static void DumpFiles()
         {
-            using (var writer = new StreamWriter("D:\\dump_files.csv"))
+            Console.WriteLine("ファイルをダンプします");
+            using (var writer = new StreamWriter(DumpFilesPath))
             {
                 for (int i = 0; i < 180; ++i)
                 {
@@ -158,10 +163,10 @@ namespace DatabaseSeeder
             Dictionary<string, string> map = new Dictionary<string, string>();
 
             Console.WriteLine("ファイル一覧を取得");
-            for (int i = 0; i < 180; ++i)
+            using (var reader = new StreamReader(DumpFilesPath))
             {
-                var img_files = Directory.GetFiles($"D:\\img\\{i}\\", "*");
-                foreach (var file in img_files)
+                var file = "";
+                while ((file = reader.ReadLine()) != null)
                 {
                     var info = new FileInfo(file);
                     var basename = info.Name.Split('.')[0];
