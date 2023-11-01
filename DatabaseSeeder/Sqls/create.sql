@@ -10,12 +10,11 @@ create table if not exists pictures (
 	width integer not null,
 	height integer not null,
 	import_path text not null,
-	saved_at text not null default (DATETIME('now', 'localtime')),
+	saved_at text not null,
 	created_at text not null
 );
-create unique index if not exists pictures_idpk_idx on pictures(id);
-create index if not exists pictures_savedid_idx on pictures(id, saved_at);
-create index if not exists pictures_createdid_idx on pictures(id, created_at);
+create index if not exists pictures_saved_idx on pictures(saved_at);
+create index if not exists pictures_created_idx on pictures(created_at);
 create unique index if not exists pictures_sha1_idx on pictures(sha1);
 
 
@@ -27,9 +26,9 @@ create table if not exists tags (
 		on delete cascade on update cascade
 );
 create unique index if not exists tags_idname_idx on tags(id, name);
-create unique index if not exists tags_idparent_idx on tags(id, parent_id);
+create unique index if not exists tags_idparent_idx on tags(parent_id, id);
 
-insert into tags(name) values ('Root');
+insert into tags(name) select 'Root' from tags where (select 1 from tags where tags.name = 'Root');
 
 /* アルバム */
 create table if not exists albums (
@@ -53,6 +52,7 @@ create table if not exists tag2pic (
 	pic_id integer not null references pictures(id)
 );
 create unique index if not exists tag2pic_tag_pic_idx on tag2pic(tag_id, pic_id);
+create unique index if not exists tag2pic_tag_pic_idx2 on tag2pic(pic_id, tag_id);
 
 
 /* アルバムと画像のアサイン */
