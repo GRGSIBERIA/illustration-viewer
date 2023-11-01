@@ -15,8 +15,8 @@ namespace DatabaseSeeder
     internal class Program
     {
         private static string DataSource = "Data Source=E:\\danbooru\\database.sqlite";
-        private static string MongoSource = "D:\\mongo.csv";
-        static private string DumpFilesPath = "D:\\dump_files.csv";
+        private static string MongoSource = @"\\Synology1\共有フォルダ\danbooru\mongo.csv";
+        static private string DumpFilesPath = @"\\Synology1\共有フォルダ\danbooru\dump_files.csv";
 
 
         static private Bitmap ResizeBitmap(Bitmap original, int width, int height, System.Drawing.Drawing2D.InterpolationMode interpolationMode)
@@ -146,7 +146,7 @@ namespace DatabaseSeeder
             {
                 for (int i = 0; i < 180; ++i)
                 {
-                    var img_files = Directory.GetFiles($"D:\\img\\{i}\\", "*");
+                    var img_files = Directory.GetFiles($"\\\\Synology1\\共有フォルダ\\danbooru\\img\\{i}\\", "*");
                     foreach (var file in img_files)
                     {
                         writer.WriteLine(file);
@@ -199,8 +199,11 @@ namespace DatabaseSeeder
             Console.WriteLine("N万件のデータを挿入します。Nを入力してください");
 
             long id10k;
-            var id10kStr = Console.ReadLine();
-            while (!long.TryParse(id10kStr, out id10k)) ;
+            var id10kStr = "";
+            do
+            {
+                id10kStr = Console.ReadLine();
+            } while (!long.TryParse(id10kStr, out id10k));
 
             using (var reader = new StreamReader(MongoSource))
             {
@@ -217,10 +220,13 @@ namespace DatabaseSeeder
 
                 using (var transaction = conn.BeginTransaction())
                 {
-                    var line = "";
-                    while ((line = reader.ReadLine()) != null)
+                    var lines = reader.ReadToEnd().Split('\n');
+                    
+                    foreach (var _line in lines)
                     {
+                        var line = _line.Trim();
                         var sep = line.Split(',');
+                        if (sep.Length <= 6) continue;
                         var id = long.Parse(sep[0]);
                         var hash = sep[1];
                         if (!map.ContainsKey(hash))
@@ -246,7 +252,7 @@ namespace DatabaseSeeder
                             Console.WriteLine($"{id,7}件目までのデータです");
                         }
 
-                        // 足きり
+                        // 足きり 次は90万件
                         if (id % (id10k * 10000) == 0)
                         {
                             break;
@@ -335,6 +341,7 @@ namespace DatabaseSeeder
             }
             conn.Close();
         }
+
         static void MigrateRootTag() 
         {
             var conn = new SQLiteConnection(DataSource);
@@ -353,7 +360,7 @@ namespace DatabaseSeeder
 
                 for (int i = 1; i <= maxid; ++i)
                 {
-                    using (var command = new SQLiteCommand("inset into tag2pic(tag_id, pic_id) values (@tag_id, @pic_id);", conn))
+                    using (var command = new SQLiteCommand("insert into tag2pic(tag_id, pic_id) values (@tag_id, @pic_id);", conn))
                     {
                         command.Parameters.Add(new SQLiteParameter("@tag_id", 1));
                         command.Parameters.Add(new SQLiteParameter("@pic_id", i));
@@ -385,12 +392,14 @@ namespace DatabaseSeeder
                     tagSql = r.ReadToEnd();
                 }
 
-                var line = "";
                 using (var reader = new StreamReader(MongoSource))
                 {
-                    while ((line = reader.ReadLine()) != null)
+                    var lines = reader.ReadToEnd().Split('\n');
+                    foreach (var _line in lines)
                     {
+                        var line = _line.Trim();
                         var sep = line.Split(',');
+                        if (sep.Length <= 6) continue; 
                         var hash = sep[1];
                         var tags = sep[6].Split(' ');
                         long id = 0;
