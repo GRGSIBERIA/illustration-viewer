@@ -50,8 +50,10 @@ insert into collections(name) select 'Root' from collections where not exists (s
 
 /* タグと画像のアサイン */
 create table if not exists tag2pic (
-	tag_id integer not null references tags(id),
+	tag_id integer not null references tags(id)
+		on delete cascade on update cascade,
 	pic_id integer not null references pictures(id)
+		on delete cascade on update cascade
 );
 create unique index if not exists tag2pic_tag_pic_idx on tag2pic(tag_id, pic_id);
 create unique index if not exists tag2pic_tag_pic_idx2 on tag2pic(pic_id, tag_id);
