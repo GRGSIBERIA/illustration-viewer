@@ -16,8 +16,8 @@ namespace DatabaseSeeder
     {
         //private static string DataSource = "Data Source=E:\\danbooru\\database.sqlite";
         private static string DataSource = @"\\\\Synology1\共有フォルダ\danbooru\database.sqlite";
-        private static string MongoSource = @"\\Synology1\共有フォルダ\danbooru\mongo.csv";
-        static private string DumpFilesPath = @"\\Synology1\共有フォルダ\danbooru\dump_files.csv";
+        private static string MongoSource = @"C:\mongo.csv";
+        static private string DumpFilesPath = @"C:\dump_files.csv";
 
 
         static private Bitmap ResizeBitmap(Bitmap original, int width, int height, System.Drawing.Drawing2D.InterpolationMode interpolationMode)
@@ -217,6 +217,7 @@ namespace DatabaseSeeder
 
             using (var reader = new StreamReader(MongoSource))
             {
+                
                 /*
                 * [0] 1,
                 * [1] d34e4cf0a437a5d65f8e82b7bcd02606,
@@ -230,11 +231,9 @@ namespace DatabaseSeeder
 
                 using (var transaction = conn.BeginTransaction())
                 {
-                    var lines = reader.ReadToEnd().Split('\n');
-                    
-                    foreach (var _line in lines)
+                    var line = "";
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        var line = _line.Trim();
                         var sep = line.Split(',');
                         if (sep.Length <= 6) continue;
                         var id = long.Parse(sep[0]);
@@ -248,8 +247,6 @@ namespace DatabaseSeeder
                         var ext = map[hash].Split('.').Last();
                         var length = new FileInfo(map[hash]).Length;
                         var tags = sep[6].Split(' ');
-
-                        Console.WriteLine(hash);
 
                         using (var command = new SQLiteCommand("select id from pictures where sha1 = @hash limit 1;", conn))
                         {
@@ -418,10 +415,9 @@ namespace DatabaseSeeder
 
                 using (var reader = new StreamReader(MongoSource))
                 {
-                    var lines = reader.ReadToEnd().Split('\n');
-                    foreach (var _line in lines)
+                    var line = "";
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        var line = _line.Trim();
                         var sep = line.Split(',');
                         if (sep.Length <= 6) continue; 
                         var hash = sep[1];
@@ -504,10 +500,9 @@ namespace DatabaseSeeder
                             tag2picSql = r.ReadToEnd();
                         }
 
-                        var lines = reader.ReadToEnd().Split('\n');
-                        foreach (var _line in lines)
+                        var line = "";
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            var line = _line.Trim();
                             var sep = line.Split(',');
                             var id = long.Parse(sep[0]);
                             var tags = sep[6].Split(' ');
