@@ -14,7 +14,8 @@ namespace DatabaseSeeder
 {
     internal class Program
     {
-        private static string DataSource = "Data Source=E:\\danbooru\\database.sqlite";
+        //private static string DataSource = "Data Source=E:\\danbooru\\database.sqlite";
+        private static string DataSource = @"\\\\Synology1\共有フォルダ\danbooru\database.sqlite";
         private static string MongoSource = @"\\Synology1\共有フォルダ\danbooru\mongo.csv";
         static private string DumpFilesPath = @"\\Synology1\共有フォルダ\danbooru\dump_files.csv";
 
@@ -118,8 +119,9 @@ namespace DatabaseSeeder
 
         static void GenerateDatabase()
         {
-            using (var conn = new SQLiteConnection(DataSource))
+            using (var conn = new SQLiteConnection())
             {
+                conn.ConnectionString = "Data Source=" + DataSource;
                 conn.Open();
 
                 string sql = "";
@@ -157,7 +159,8 @@ namespace DatabaseSeeder
 
         static void SeedingPicture()
         {
-            var conn = new SQLiteConnection(DataSource);
+            var conn = new SQLiteConnection();
+            conn.ConnectionString = "Data Source=" + DataSource;
             conn.Open();
 
             Dictionary<string, string> map = new Dictionary<string, string>();
@@ -187,8 +190,15 @@ namespace DatabaseSeeder
                 var obj = command.ExecuteScalar();
                 if (obj != null)
                 {
-                    var id = (long)obj;
-                    Console.WriteLine($"現在挿入されている最大IDは{id}件です");
+                    try
+                    {
+                        var id = (long)obj;
+                        Console.WriteLine($"現在挿入されている最大IDは{id}件です");
+                    }
+                    catch
+                    {
+                        Console.WriteLine("まだデータは挿入されていません");
+                    }
                 }
                 else
                 {
@@ -238,6 +248,8 @@ namespace DatabaseSeeder
                         var ext = map[hash].Split('.').Last();
                         var length = new FileInfo(map[hash]).Length;
                         var tags = sep[6].Split(' ');
+
+                        Console.WriteLine(hash);
 
                         using (var command = new SQLiteCommand("select id from pictures where sha1 = @hash limit 1;", conn))
                         {
@@ -344,7 +356,8 @@ namespace DatabaseSeeder
 
         static void MigrateRootTag() 
         {
-            var conn = new SQLiteConnection(DataSource);
+            var conn = new SQLiteConnection();
+            conn.ConnectionString = "Data Source=" + DataSource;
             conn.Open();
 
             Console.WriteLine("ルートのタグを挿入します");
@@ -386,6 +399,9 @@ namespace DatabaseSeeder
         static void MigrateTags()
         {
             var conn = new SQLiteConnection(DataSource);
+            conn.ConnectionString = "Data Source=" + DataSource;
+            conn.Open();
+
             Console.WriteLine("データベースとのコネクションを確立しました");
 
             using (var transaction = conn.BeginTransaction())
@@ -454,12 +470,14 @@ namespace DatabaseSeeder
                 transaction.Commit();
             }
             Console.WriteLine("マイグレーションを終了します");
+            conn.Close();
         }
 
         static void MigrateTag2Pic()
         {
-            using (var conn = new SQLiteConnection(DataSource))
+            using (var conn = new SQLiteConnection())
             {
+                conn.ConnectionString = "Data Source=" + DataSource;
                 Console.WriteLine("コネクションを確立しました");
                 conn.Open();
                 Console.WriteLine("コネクションをオープンします");
@@ -534,8 +552,9 @@ namespace DatabaseSeeder
 
         static void DropDatabase()
         {
-            using (var conn = new SQLiteConnection(DataSource))
+            using (var conn = new SQLiteConnection())
             {
+                conn.ConnectionString = "Data Source=" + DataSource;
                 conn.Open();
 
                 string sql = "";
