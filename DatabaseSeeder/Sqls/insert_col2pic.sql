@@ -1,0 +1,1 @@
+﻿insert into col2pic(name) values (@name);

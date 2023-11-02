@@ -79,6 +79,12 @@
     <Content Include="Sqls\drop.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sqls\insert_album2pic.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sqls\insert_col2pic.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sqls\insert_picture.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
