@@ -364,7 +364,15 @@ namespace DatabaseSeeder
                     {
                         command.Parameters.Add(new SQLiteParameter("@tag_id", 1));
                         command.Parameters.Add(new SQLiteParameter("@pic_id", i));
-                        command.ExecuteNonQuery();
+                        try
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                        catch 
+                        { 
+                            continue; 
+                        }
+                        
                     }
                 }
                 transaction.Commit();
@@ -459,6 +467,7 @@ namespace DatabaseSeeder
                 using (var transaction =  conn.BeginTransaction())
                 {
                     Console.WriteLine("トランザクションを開始します");
+
                     using (var reader = new StreamReader(MongoSource))
                     {
                         /*
@@ -477,9 +486,10 @@ namespace DatabaseSeeder
                             tag2picSql = r.ReadToEnd();
                         }
 
-                        var line = "";
-                        while ((line = reader.ReadLine()) != null)
+                        var lines = reader.ReadToEnd().Split('\n');
+                        foreach (var _line in lines)
                         {
+                            var line = _line.Trim();
                             var sep = line.Split(',');
                             var id = long.Parse(sep[0]);
                             var tags = sep[6].Split(' ');
