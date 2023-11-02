@@ -37,6 +37,7 @@ create table if not exists albums (
 );
 create unique index if not exists albums_idname_idx on albums(id, name);
 
+insert into albums(name) select 'Root' from albums where not exists (select 1 from albums where albums.name = 'Root');
 
 /* コレクション */
 create table if not exists collections (
@@ -45,6 +46,7 @@ create table if not exists collections (
 );
 create unique index if not exists collections_idname_idx on collections(id, name);
 
+insert into collections(name) select 'Root' from collections where not exists (select 1 from collections where collections.name = 'Root');
 
 /* タグと画像のアサイン */
 create table if not exists tag2pic (
