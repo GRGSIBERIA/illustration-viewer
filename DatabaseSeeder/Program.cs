@@ -15,9 +15,9 @@ namespace DatabaseSeeder
     internal class Program
     {
         //private static string DataSource = "Data Source=E:\\danbooru\\database.sqlite";
-        private static string DataSource = @"\\\\Synology1\共有フォルダ\danbooru\database.sqlite";
+        private static string DataSource = @"Data Source=\\\\Synology1\共有フォルダ\danbooru\database.sqlite";
         private static string MongoSource = @"C:\mongo.csv";
-        static private string DumpFilesPath = @"C:\dump_files.csv";
+        static private string DumpFilesPath = @"D:\dump_files.csv";
 
 
         static private Bitmap ResizeBitmap(Bitmap original, int width, int height, System.Drawing.Drawing2D.InterpolationMode interpolationMode)
@@ -119,9 +119,8 @@ namespace DatabaseSeeder
 
         static void GenerateDatabase()
         {
-            using (var conn = new SQLiteConnection())
+            using (var conn = new SQLiteConnection(DataSource))
             {
-                conn.ConnectionString = "Data Source=" + DataSource;
                 conn.Open();
 
                 string sql = "";
@@ -148,7 +147,7 @@ namespace DatabaseSeeder
             {
                 for (int i = 0; i < 180; ++i)
                 {
-                    var img_files = Directory.GetFiles($"\\\\Synology1\\共有フォルダ\\danbooru\\img\\{i}\\", "*");
+                    var img_files = Directory.GetFiles($"D:\\img\\{i}\\", "*");
                     foreach (var file in img_files)
                     {
                         writer.WriteLine(file);
@@ -159,8 +158,7 @@ namespace DatabaseSeeder
 
         static void SeedingPicture()
         {
-            var conn = new SQLiteConnection();
-            conn.ConnectionString = "Data Source=" + DataSource;
+            var conn = new SQLiteConnection(DataSource);
             conn.Open();
 
             Dictionary<string, string> map = new Dictionary<string, string>();
@@ -353,8 +351,7 @@ namespace DatabaseSeeder
 
         static void MigrateRootTag() 
         {
-            var conn = new SQLiteConnection();
-            conn.ConnectionString = "Data Source=" + DataSource;
+            var conn = new SQLiteConnection(DataSource);
             conn.Open();
 
             Console.WriteLine("ルートのタグを挿入します");
@@ -396,7 +393,6 @@ namespace DatabaseSeeder
         static void MigrateTags()
         {
             var conn = new SQLiteConnection(DataSource);
-            conn.ConnectionString = "Data Source=" + DataSource;
             conn.Open();
 
             Console.WriteLine("データベースとのコネクションを確立しました");
@@ -471,9 +467,8 @@ namespace DatabaseSeeder
 
         static void MigrateTag2Pic()
         {
-            using (var conn = new SQLiteConnection())
+            using (var conn = new SQLiteConnection(DataSource))
             {
-                conn.ConnectionString = "Data Source=" + DataSource;
                 Console.WriteLine("コネクションを確立しました");
                 conn.Open();
                 Console.WriteLine("コネクションをオープンします");
@@ -540,7 +535,7 @@ namespace DatabaseSeeder
                     Console.WriteLine("トランザクションをコミットしました");
                 }
 
-                conn.Clone();
+                conn.Close();
                 Console.WriteLine("コネクションを閉じました");
             }
         }
