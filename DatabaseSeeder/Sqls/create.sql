@@ -28,7 +28,7 @@ create table if not exists tags (
 create unique index if not exists tags_idname_idx on tags(id, name);
 create unique index if not exists tags_idparent_idx on tags(parent_id, id);
 
-insert into tags(name) select 'Root' from tags where (select 1 from tags where tags.name = 'Root');
+insert into tags(name) select 'Root' from tags where not exists (select 1 from tags where tags.name = 'Root');
 
 /* アルバム */
 create table if not exists albums (
