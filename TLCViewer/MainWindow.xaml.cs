@@ -78,7 +78,7 @@ namespace TLCViewer
             
             for (int i = 0; i < rows; ++i)
             {
-                var item = new HorizontalStack(rows, thumbnails, pictures);
+                var item = new HorizontalStack(i, rows, (int)HorizontalSlider.Value, thumbnails, pictures);
                 //var item = new HorizontalStack();
                 listingPictures.Children.Add(item);
             }

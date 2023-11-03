@@ -30,7 +30,7 @@ namespace TLCViewer
             InitializeComponent();
         }
 
-        public HorizontalStack(int colmns, Image[] thumbnails, Image[] pictures)
+        public HorizontalStack(int row, int rows, int colmns, Image[] thumbnails, Image[] pictures)
         {
             this.colmns = colmns;
             this.thumbnails = thumbnails;
@@ -38,7 +38,10 @@ namespace TLCViewer
 
             for (int i = 0; i < colmns; ++i)
             {
-                var item = new ThumbButton();
+                var id = rows * row + i;
+                if (id >= thumbnails.Length) break;
+
+                var item = new ThumbButton(thumbnails[id], pictures[id]);
                 stack.Children.Add(item);
             }
 
