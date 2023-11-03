@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.SQLite;
+using System.IO;
+using System.Configuration;
 
 namespace TLCViewer
 {
@@ -20,14 +23,29 @@ namespace TLCViewer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static SQLiteConnection GetSQLiteConnection()
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            return new SQLiteConnection("Data Source=" + config.AppSettings.Settings["DatabasePath"].Value);
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+
+
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            // SQLのコネクションを作る
+            // 初期設定を行う
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            if (config.AppSettings.Settings.Count <= 0)
+            {
+                config.AppSettings.Settings.Add("DatabasePath", "./database.db");
+                config.Save();
+            }
         }
     }
 }

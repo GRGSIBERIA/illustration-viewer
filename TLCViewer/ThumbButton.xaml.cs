@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace TLCViewer
 {
     /// <summary>
@@ -22,6 +23,7 @@ namespace TLCViewer
     {
         public ThumbButton()
         {
+            
             InitializeComponent();
         }
     }

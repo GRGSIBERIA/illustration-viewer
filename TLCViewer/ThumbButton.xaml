@@ -8,7 +8,7 @@
              d:DesignHeight="100" d:DesignWidth="100">
     <Grid>
         <Button>
-            <Image x:Name="thumb"/>
+            <Image x:Name="thumb" Source="{Binding Picture}"/>
         </Button>
     </Grid>
 </UserControl>

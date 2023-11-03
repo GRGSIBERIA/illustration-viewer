@@ -63,39 +63,7 @@
                     <Grid x:Name="listingImageGrid" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="Gray" Loaded="MainWindow_Loaded">
                         <ScrollViewer x:Name="listingPicturesScroll">
                             <StackPanel Orientation="Vertical" x:Name="listingPictures">
-                                <UniformGrid Rows="1">
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                </UniformGrid>
-                                <UniformGrid Rows="1">
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                </UniformGrid>
-                                <UniformGrid Rows="1">
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                    <Button>
-                                        <Image Source="/Images/star.png"/>
-                                    </Button>
-                                </UniformGrid>
+                                
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
