@@ -21,17 +21,26 @@ namespace TLCViewer
     /// </summary>
     public partial class HorizontalStack : UserControl
     {
-        ThumbButton[] thumbButtons;
+        int colmns = 1;
+        Image[]? thumbnails;
+        Image[]? pictures;
 
         public HorizontalStack()
         {
-            thumbButtons = new ThumbButton[2];
-            
-            if (stack.Children.Contains(thumbButtons[0]))
+            InitializeComponent();
+        }
+
+        public HorizontalStack(int colmns, Image[] thumbnails, Image[] pictures)
+        {
+            this.colmns = colmns;
+            this.thumbnails = thumbnails;
+            this.pictures = pictures;
+
+            for (int i = 0; i < colmns; ++i)
             {
-                stack.Children.Add(thumbButtons[0]);
+                var item = new ThumbButton();
+                stack.Children.Add(item);
             }
-            
 
             InitializeComponent();
         }

@@ -30,18 +30,29 @@
                 <MenuItem Header="最後"/>
             </MenuItem>
         </Menu>
+        <StatusBar Height="32" DockPanel.Dock="Top">
+            <StatusBarItem>
+                <ProgressBar Width="128" Height="20" Value="100" x:Name="ProgressBar"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <Label x:Name="LogLabel" VerticalAlignment="Center" Content="起動しました"/>
+            </StatusBarItem>
+        </StatusBar>
         <ToolBar DockPanel.Dock="Top">
             <Label Content="検索" VerticalAlignment="Center"/>
             <TextBox Width="256" TextAlignment="Left" />
             <Separator/>
             <Label Content="グリッド "/>
             <Label Content="幅" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Slider Width="80" Height="20"/>
+            <Slider Width="80" Height="20" x:Name="HorizontalSlider" TickFrequency="1" Minimum="1" Maximum="10" ValueChanged="Slider_ValueChanged"/>
+            <Separator/>
             <Label Content="拡縮" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Slider Width="80" Height="20" Value="1" Minimum="-5" Maximum="5"/>
-            <Label Content="1倍" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Separator/>
+            <Label Content="ページ枚数" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Width="64" TextAlignment="Left" Text="64"/>
         </ToolBar>
-        <TabControl x:Name="tabControl">
+        <TabControl x:Name="tabControl" DockPanel.Dock="Top">
             <TabItem Header="検索">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
@@ -55,15 +66,20 @@
                         <RowDefinition Height="32"/>
                     </Grid.RowDefinitions>
                     <TreeView Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
-                        <TreeViewItem Header="アルバム" x:Name="treeAlbums"/>
-                        <TreeViewItem Header="コレクション" x:Name="treeCollections"/>
-                        <TreeViewItem Header="タグ" x:Name="treeTags"/>
+                        <TreeViewItem Header="アルバム" x:Name="treeAlbums">
+                            <TreeViewItem Header="Root" x:Name="AlbumsRoot"/>
+                        </TreeViewItem>
+                        <TreeViewItem Header="コレクション" x:Name="treeCollections">
+                            <TreeViewItem Header="Root" x:Name="CollectionsRoot"/>
+                        </TreeViewItem>
+                        <TreeViewItem Header="タグ" x:Name="treeTags">
+                            <TreeViewItem Header="Root" x:Name="TagsRoot"/>
+                        </TreeViewItem>
                         <TreeViewItem Header="選択中" x:Name="treeSelects"/>
                     </TreeView>
                     <Grid x:Name="listingImageGrid" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="Gray" Loaded="MainWindow_Loaded">
                         <ScrollViewer x:Name="listingPicturesScroll">
                             <StackPanel Orientation="Vertical" x:Name="listingPictures">
-                                
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
@@ -103,6 +119,5 @@
                 <Grid Background="#FFE5E5E5"/>
             </TabItem>
         </TabControl>
-
     </DockPanel>
 </Window>

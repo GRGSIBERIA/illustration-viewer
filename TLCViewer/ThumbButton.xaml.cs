@@ -21,10 +21,22 @@ namespace TLCViewer
     /// </summary>
     public partial class ThumbButton : UserControl
     {
+        Image? thumbnail = null;
+        Image? picture = null;
+
         public ThumbButton()
         {
-            
             InitializeComponent();
         }
+
+        public ThumbButton(Image thumbnail, Image picture)
+        {
+            this.thumbnail = thumbnail;
+            this.picture = picture;
+
+            InitializeComponent();
+        }
+
+
     }
 }
