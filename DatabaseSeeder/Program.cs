@@ -235,6 +235,13 @@ namespace DatabaseSeeder
                         var sep = line.Split(',');
                         if (sep.Length <= 6) continue;
                         var id = long.Parse(sep[0]);
+
+                        // 足きり 次は95万件
+                        if (id % (id10k * 10000) == 0)
+                        {
+                            break;
+                        }
+
                         var hash = sep[1];
                         if (!map.ContainsKey(hash))
                         {
@@ -257,12 +264,6 @@ namespace DatabaseSeeder
                         if (id % 1000 == 0)
                         {
                             Console.WriteLine($"{id,7}件目までのデータです");
-                        }
-
-                        // 足きり 次は90万件
-                        if (id % (id10k * 10000) == 0)
-                        {
-                            break;
                         }
 
                         // ファイルを読み込む
