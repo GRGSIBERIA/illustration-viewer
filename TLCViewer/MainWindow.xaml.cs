@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Data.SQLite;
 using System.IO;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace TLCViewer
 {
@@ -59,9 +60,41 @@ namespace TLCViewer
             initialized = true;
         }
 
+        private string GetDatabasePath()
+        {
+            // ネットワークドライブの場合、なぜかエスケープする必要がある
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var path = config.AppSettings.Settings["DatabasePath"].Value;
+            if (Regex.IsMatch(path, "^//"))
+            {
+                path = "//" + path;
+            }
+            else if (Regex.IsMatch(path, "^\\\\"))
+            {
+                path = "\\\\" + path;
+            }
+            return path;
+        }
+
+        private void GetPictures()
+        {
+            // データベースを操作する
+            using (var conn = new SQLiteConnection("Data Source=" + GetDatabasePath()))
+            {
+                conn.Open();
+                using (var command = conn.CreateCommand())
+                {
+
+                }
+                conn.Close();
+            }
+        }
+
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (!initialized) return;   // ValueChangedがWindowLoadedを呼び出す
+
+            // 既にpicturesなどには値が代入されているものとして処理する
 
             // 行数を計算する
             int rows = 0;
