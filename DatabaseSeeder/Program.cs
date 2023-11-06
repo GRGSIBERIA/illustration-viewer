@@ -233,10 +233,10 @@ namespace DatabaseSeeder
                     while ((line = reader.ReadLine()) != null)
                     {
                         var sep = line.Split(',');
-                        if (sep.Length <= 6) continue;
+                        if (sep.Length <= 1) continue;
                         var id = long.Parse(sep[0]);
 
-                        // 足きり 次は95万件
+                        // 足きり 次は100万件
                         if (id % (id10k * 10000) == 0)
                         {
                             break;
